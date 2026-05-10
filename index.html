@@ -27,11 +27,44 @@ header{padding:14px 20px;border-bottom:1px solid var(--brd);display:flex;align-i
 .user-badge{font-size:12px;color:var(--acc);background:#7c6bff15;padding:4px 10px;border-radius:20px;border:1px solid #7c6bff33;cursor:pointer;font-weight:500}
 .user-badge:hover{background:#7c6bff25}
 
+/* ── NAV DESKTOP (top) ── */
 nav{padding:0 20px;border-bottom:1px solid var(--brd);display:flex;gap:0;background:var(--bg);overflow-x:auto}
-.tab{padding:12px 16px;font-size:13px;font-weight:500;color:var(--txt2);cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;user-select:none;white-space:nowrap}
+.tab{padding:12px 16px;font-size:13px;font-weight:500;color:var(--txt2);cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;user-select:none;white-space:nowrap;display:flex;align-items:center;gap:5px}
 .tab:hover{color:var(--txt)}
 .tab.active{color:var(--acc);border-bottom-color:var(--acc)}
-.tab svg{vertical-align:-3px;margin-right:5px}
+.tab svg{flex-shrink:0}
+.tab .tab-label{display:inline}
+
+/* ── NAV MOBILE (bottom bar) ── */
+@media(max-width:600px){
+  nav{display:none}
+  body{padding-bottom:68px}
+  #bottom-nav{
+    display:flex;
+    position:fixed;bottom:0;left:0;right:0;
+    background:var(--bg2);
+    border-top:1px solid var(--brd2);
+    z-index:900;
+    height:62px;
+    padding:0 4px;
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  .btab{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:3px;padding:4px 2px;
+    color:var(--txt3);font-size:10px;font-weight:500;
+    cursor:pointer;border:none;background:none;font-family:'DM Sans',sans-serif;
+    border-top:2px solid transparent;
+    transition:color .18s,border-color .18s;
+    user-select:none;
+  }
+  .btab svg{width:20px;height:20px}
+  .btab.active{color:var(--acc);border-top-color:var(--acc)}
+  .btab:not(.active):hover{color:var(--txt2)}
+}
+@media(min-width:601px){
+  #bottom-nav{display:none}
+}
 
 main{flex:1;padding:20px;max-width:760px;width:100%;margin:0 auto;position:relative}
 .section{display:none}.section.active{display:block}
@@ -795,11 +828,14 @@ function doLogin(u){
   // mostrar aba casal se usuário faz parte de um casal
   const couple = getCurrentCouple();
   const casalTab = document.getElementById('tab-casal');
+  const btabCasal = document.getElementById('btab-casal');
   if(couple){
     casalTab.style.display = 'inline-flex';
     casalTab.title = couple.label;
+    if(btabCasal) btabCasal.style.display = '';
   } else {
     casalTab.style.display = 'none';
+    if(btabCasal) btabCasal.style.display = 'none';
   }
   initApp();
 }
@@ -815,6 +851,7 @@ function logout(){
   currentUser = null;
   clearInterval(timerInterval);
   document.getElementById('tab-casal').style.display = 'none';
+  const _btc=document.getElementById('btab-casal');if(_btc)_btc.style.display='none';
   document.getElementById('user-badge').textContent = '👤 —';
   const sb=document.getElementById('sair-btn');if(sb)sb.style.display='none';
   document.getElementById('welcome-screen').classList.remove('hidden');
@@ -1778,6 +1815,46 @@ function initApp(){
   renderLogin();
   updateHeaderDate();
 })();
+</script>
+<!-- BOTTOM NAV (mobile) -->
+<nav id="bottom-nav">
+  <button class="btab active" data-tab="tarefas" onclick="showTab('tarefas');syncBottomNav(this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    Atividades
+  </button>
+  <button class="btab" data-tab="financas" onclick="showTab('financas');syncBottomNav(this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+    Finanças
+  </button>
+  <button class="btab" data-tab="pagamentos" onclick="showTab('pagamentos');syncBottomNav(this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+    Pag. Fixos
+  </button>
+  <button class="btab" data-tab="reservas" onclick="showTab('reservas');syncBottomNav(this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+    Reservas
+  </button>
+  <button class="btab" id="btab-casal" data-tab="casal" onclick="showTab('casal');syncBottomNav(this)" style="display:none">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+    Casal
+  </button>
+  <button class="btab" data-tab="historico" onclick="showTab('historico');syncBottomNav(this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    Histórico
+  </button>
+</nav>
+<script>
+function syncBottomNav(el){
+  document.querySelectorAll('#bottom-nav .btab').forEach(b=>b.classList.remove('active'));
+  if(el) el.classList.add('active');
+}
+// Patch showTab to also sync bottom nav
+const _origShowTab = showTab;
+showTab = function(tab){
+  _origShowTab(tab);
+  const btab = document.querySelector('#bottom-nav .btab[data-tab="'+tab+'"]');
+  syncBottomNav(btab||null);
+};
 </script>
 <!-- BOTTOM CREDITS -->
 <div class="credits">
