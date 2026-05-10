@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Meu Painel de Controle</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -34,7 +34,7 @@ nav{padding:0 20px;border-bottom:1px solid var(--brd);display:flex;gap:0;backgro
 .tab svg{vertical-align:-3px;margin-right:5px}
 
 main{flex:1;padding:20px;max-width:760px;width:100%;margin:0 auto;position:relative}
-.section{display:none;transition:none!important}.section.active{display:block;transition:none!important}
+.section{display:none}.section.active{display:block}
 
 .card{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);padding:16px 18px;margin-bottom:12px}
 .card-sm{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--r2);padding:10px 12px;margin-bottom:8px}
@@ -266,7 +266,7 @@ html { -webkit-text-size-adjust: 100%; }
 .btn { min-height: 40px; padding: 9px 16px; }
 .btn-sm { min-height: 32px; padding: 5px 11px; }
 .tab { padding: 13px 14px; min-height: 46px; display:inline-flex; align-items:center; }
-input, select, textarea { min-height: 40px; font-size: 16px !important; } /* 16px evita zoom no iOS */
+input, select, textarea { min-height: 40px; font-size: 16px; } /* 16px evita zoom no iOS */
 .filter-btn { min-height: 32px; padding: 6px 13px; }
 .user-btn { min-height: 50px; padding: 12px 16px; }
 #sair-btn { min-height: 34px; }
@@ -789,14 +789,14 @@ function doLogin(u){
   saveSession(u.id);
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('user-badge').textContent = '👤 ' + u.name.split(' ')[0];
-  const sb=document.getElementById('sair-btn');if(sb)sb.style.display='';
+  const sb=document.getElementById('sair-btn');if(sb)sb.style.display='inline-flex';
   document.getElementById('login-pass-input').value = '';
   document.getElementById('login-password-area').style.display = 'none';
   // mostrar aba casal se usuário faz parte de um casal
   const couple = getCurrentCouple();
   const casalTab = document.getElementById('tab-casal');
   if(couple){
-    casalTab.style.display = '';
+    casalTab.style.display = 'inline-flex';
     casalTab.title = couple.label;
   } else {
     casalTab.style.display = 'none';
@@ -989,19 +989,17 @@ document.getElementById('modal-overlay').addEventListener('click', e=>{ if(e.tar
 
 // ─── TABS ─────────────────────────────────────────────────────────────────
 function showTab(t){
-  // highlight correct nav tab
   document.querySelectorAll('#main-nav .tab').forEach(b=>{
     b.classList.toggle('active', b.dataset.tab===t);
   });
-  // hide ALL sections forcefully via inline style
   ['tarefas','financas','pagamentos','reservas','casal','historico'].forEach(id=>{
     const s = document.getElementById(id);
-    if(s){ s.style.cssText='display:none!important'; s.classList.remove('active'); }
+    if(!s) return;
+    s.style.display = 'none';
+    s.classList.remove('active');
   });
-  // show only the target
   const el = document.getElementById(t);
-  if(el){ el.style.cssText='display:block'; el.classList.add('active'); }
-  // render content
+  if(el){ el.style.display = 'block'; el.classList.add('active'); }
   if(t==='tarefas')   renderTasks();
   if(t==='financas')  renderFin();
   if(t==='pagamentos')renderPF();
@@ -1435,8 +1433,8 @@ function setCasalTab(t){
   casalSubTab = t;
   document.getElementById('cs-financas').classList.toggle('on', t==='financas');
   document.getElementById('cs-reservas').classList.toggle('on', t==='reservas');
-  document.getElementById('casal-financas-sec').style.display = t==='financas'?'block':'none';
-  document.getElementById('casal-reservas-sec').style.display = t==='reservas'?'block':'none';
+  document.getElementById('casal-financas-sec').style.display = (t==='financas') ? 'block' : 'none';
+  document.getElementById('casal-reservas-sec').style.display = (t==='reservas') ? 'block' : 'none';
   if(t==='financas') renderCasalFin();
   if(t==='reservas') renderCasalReservas();
 }
@@ -1745,13 +1743,13 @@ function initApp(){
   setInterval(updateTicker, 5000);
   if(state.tasks.some(t=>t.status==='iniciada')) startGlobalTick();
 
-  // force correct tab display state on load
+  // force correct tab on load
   ['tarefas','financas','pagamentos','reservas','casal','historico'].forEach(id=>{
     const s=document.getElementById(id);
-    if(s){ s.style.cssText='display:none!important'; s.classList.remove('active'); }
+    if(s){ s.style.display='none'; s.classList.remove('active'); }
   });
   const firstTab=document.getElementById('tarefas');
-  if(firstTab){ firstTab.style.cssText='display:block'; firstTab.classList.add('active'); }
+  if(firstTab){ firstTab.style.display='block'; firstTab.classList.add('active'); }
   document.querySelectorAll('#main-nav .tab').forEach(b=>{
     b.classList.toggle('active', b.dataset.tab==='tarefas');
   });
