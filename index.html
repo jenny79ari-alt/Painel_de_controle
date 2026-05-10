@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meu Painel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0f0f13;
+  --bg2:#17171e;
+  --bg3:#1e1e28;
+  --card:#1e1e28;
+  --brd:#2a2a38;
+  --brd2:#3a3a50;
+  --txt:#f0f0f5;
+  --txt2:#8888aa;
+  --txt3:#555570;
+  --acc:#7c6bff;
+  --acc2:#4ecdc4;
+  --green:#22c98a;
+  --red:#ff5a5a;
+  --amber:#f5a623;
+  --blue:#4d8fff;
+  --r:12px;
+  --r2:8px;
+}
+html,body{height:100%;background:var(--bg);color:var(--txt);font-family:'DM Sans',sans-serif;font-size:15px}
+body{display:flex;flex-direction:column;min-height:100vh}
+
+/* HEADER */
+header{padding:18px 24px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between;background:var(--bg)}
+.logo{font-size:17px;font-weight:600;letter-spacing:-.3px;color:var(--txt)}
+.logo span{color:var(--acc)}
+.date-badge{font-size:12px;color:var(--txt2);background:var(--bg3);padding:5px 12px;border-radius:20px;border:1px solid var(--brd)}
+
+/* TABS */
+nav{padding:0 24px;border-bottom:1px solid var(--brd);display:flex;gap:0;background:var(--bg)}
+.tab{padding:14px 20px;font-size:13px;font-weight:500;color:var(--txt2);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;user-select:none}
+.tab:hover{color:var(--txt)}
+.tab.active{color:var(--acc);border-bottom-color:var(--acc)}
+.tab svg{vertical-align:-3px;margin-right:6px}
+
+/* MAIN */
+main{flex:1;padding:24px;max-width:760px;width:100%;margin:0 auto}
+.section{display:none}.section.active{display:block}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);padding:18px 20px;margin-bottom:12px}
+.card-sm{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--r2);padding:12px 14px;margin-bottom:8px}
+
+/* INPUTS */
+input,select{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--r2);padding:9px 12px;font-size:13px;color:var(--txt);font-family:'DM Sans',sans-serif;outline:none;transition:border .15s}
+input:focus,select:focus{border-color:var(--acc)}
+input::placeholder{color:var(--txt3)}
+select option{background:var(--bg2)}
+
+/* BUTTONS */
+.btn{padding:9px 16px;border-radius:var(--r2);border:1px solid var(--brd2);background:var(--bg3);color:var(--txt);cursor:pointer;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{background:var(--brd);border-color:var(--brd2)}
+.btn:active{transform:scale(.98)}
+.btn-green{background:#22c98a18;border-color:#22c98a44;color:var(--green)}
+.btn-green:hover{background:#22c98a28}
+.btn-red{background:#ff5a5a18;border-color:#ff5a5a44;color:var(--red)}
+.btn-red:hover{background:#ff5a5a28}
+.btn-amber{background:#f5a62318;border-color:#f5a62344;color:var(--amber)}
+.btn-amber:hover{background:#f5a62328}
+.btn-blue{background:#4d8fff18;border-color:#4d8fff44;color:var(--blue)}
+.btn-blue:hover{background:#4d8fff28}
+.btn-acc{background:#7c6bff22;border-color:#7c6bff55;color:var(--acc)}
+.btn-acc:hover{background:#7c6bff33}
+.btn-sm{padding:5px 10px;font-size:12px}
+.del-btn{background:none;border:none;color:var(--txt3);cursor:pointer;padding:4px 6px;border-radius:6px;transition:color .15s;font-size:13px}
+.del-btn:hover{color:var(--red)}
+
+/* ROW */
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px}
+.metric{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--r2);padding:14px;text-align:center}
+.metric .label{font-size:11px;color:var(--txt2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.metric .val{font-size:22px;font-weight:600;color:var(--txt)}
+.metric .val.green{color:var(--green)}
+.metric .val.red{color:var(--red)}
+.metric .val.blue{color:var(--blue)}
+.metric .val.amber{color:var(--amber)}
+
+/* STATUS BADGES */
+.sbadge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:500}
+.s-iniciada{background:#4d8fff18;color:var(--blue)}
+.s-pausada{background:#f5a62318;color:var(--amber)}
+.s-concluida{background:#22c98a18;color:var(--green)}
+.dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dot-iniciada{background:var(--blue)}
+.dot-pausada{background:var(--amber)}
+.dot-concluida{background:var(--green)}
+
+/* TIMER */
+.timer-display{font-family:'DM Mono',monospace;font-size:2rem;font-weight:500;color:var(--acc);letter-spacing:3px;line-height:1}
+
+/* TASK CARDS */
+.task-card{background:var(--bg3);border:1px solid var(--brd);border-radius:var(--r2);padding:12px 14px;margin-bottom:8px;transition:border-color .2s}
+.task-card.running{border-color:#4d8fff44}
+.task-card.paused{border-color:#f5a62344}
+.task-actions{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+
+/* FILTERS */
+.filters{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.filter-btn{padding:5px 12px;border-radius:20px;border:1px solid var(--brd);background:var(--bg3);color:var(--txt2);cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;transition:all .15s}
+.filter-btn.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+
+/* DAY LABEL */
+.day-label{font-size:11px;color:var(--txt2);padding:10px 0 4px;text-transform:uppercase;letter-spacing:.5px}
+
+/* SEPARATOR */
+.sep{font-size:11px;color:var(--txt2);padding:4px 0 10px;text-transform:uppercase;letter-spacing:.5px}
+
+/* MONTH SELECT */
+.month-row{display:flex;align-items:center;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+
+/* CONTAS */
+.bill-item{display:grid;grid-template-columns:1fr auto auto auto;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--brd)}
+.bill-item:last-child{border:none}
+.bill-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.bill-dot.paid{background:var(--green)}.bill-dot.pending{background:var(--amber)}.bill-dot.overdue{background:var(--red)}
+.pill{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500}
+.pill-paid{background:#22c98a18;color:var(--green)}
+.pill-pending{background:#f5a62318;color:var(--amber)}
+.pill-overdue{background:#ff5a5a18;color:var(--red)}
+.prog-bar{height:4px;background:var(--bg3);border-radius:4px;overflow:hidden;margin-top:4px}
+.prog-fill{height:100%;border-radius:4px;background:var(--green);transition:width .4s ease}
+
+/* FIN ITEMS */
+.fin-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--brd)}
+.fin-item:last-child{border:none}
+.gain{color:var(--green);font-weight:600}
+.loss{color:var(--red);font-weight:600}
+.tag{font-size:10px;color:var(--txt2);background:var(--bg3);padding:1px 6px;border-radius:6px;margin-left:5px;border:1px solid var(--brd)}
+
+/* ACTIVE TASK BOX */
+.active-box{background:linear-gradient(135deg,#4d8fff0d,#7c6bff0d);border:1px solid #4d8fff33;border-radius:var(--r);padding:16px 20px;margin-bottom:12px}
+
+/* EMPTY */
+.empty{color:var(--txt3);font-size:13px;padding:12px 0;text-align:center}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:3px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">meu<span>.</span>painel</div>
+  <div class="date-badge" id="header-date"></div>
+</header>
+
+<nav>
+  <div class="tab active" onclick="showTab('tarefas')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+    Atividades
+  </div>
+  <div class="tab" onclick="showTab('contas')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+    Contas
+  </div>
+  <div class="tab" onclick="showTab('financas')">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+    Finanças
+  </div>
+</nav>
+
+<main>
+
+  <!-- ATIVIDADES -->
+  <div id="tarefas" class="section active">
+    <div class="card">
+      <div class="row">
+        <input type="text" id="task-input" placeholder="Nome da atividade..." style="flex:1;min-width:160px">
+        <button class="btn btn-green" onclick="addTask()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+          Iniciar
+        </button>
+      </div>
+    </div>
+
+    <div id="today-summary" class="metrics"></div>
+
+    <div class="filters">
+      <button class="filter-btn on" id="f-all" onclick="setFilter('all')">Todas</button>
+      <button class="filter-btn" id="f-iniciada" onclick="setFilter('iniciada')"><span class="dot dot-iniciada" style="display:inline-block;vertical-align:middle;margin-right:4px"></span>Iniciadas</button>
+      <button class="filter-btn" id="f-pausada" onclick="setFilter('pausada')"><span class="dot dot-pausada" style="display:inline-block;vertical-align:middle;margin-right:4px"></span>Pausadas</button>
+      <button class="filter-btn" id="f-concluida" onclick="setFilter('concluida')"><span class="dot dot-concluida" style="display:inline-block;vertical-align:middle;margin-right:4px"></span>Concluídas</button>
+    </div>
+
+    <div id="task-list"></div>
+  </div>
+
+  <!-- CONTAS -->
+  <div id="contas" class="section">
+    <div class="month-row">
+      <select id="bill-month-select" onchange="renderBills()" style="min-width:160px"></select>
+      <button class="btn btn-acc" onclick="newBillMonth()">+ Novo mês</button>
+    </div>
+    <div id="bill-summary" class="metrics"></div>
+    <div class="card">
+      <div class="sep" style="padding-top:0">Adicionar conta</div>
+      <div class="row">
+        <input type="text" id="bill-name" placeholder="Nome da conta..." style="flex:1;min-width:140px">
+        <input type="number" id="bill-val" placeholder="R$ valor" step="0.01" style="min-width:110px">
+        <input type="number" id="bill-due" placeholder="Dia venc." min="1" max="31" style="min-width:95px">
+        <button class="btn btn-green" onclick="addBill()">+ Adicionar</button>
+      </div>
+    </div>
+    <div id="bill-list"></div>
+  </div>
+
+  <!-- FINANÇAS -->
+  <div id="financas" class="section">
+    <div class="month-row">
+      <select id="month-select" onchange="renderFin()" style="min-width:160px"></select>
+      <button class="btn btn-acc" onclick="newMonth()">+ Novo mês</button>
+    </div>
+    <div id="fin-summary" class="metrics"></div>
+    <div class="card">
+      <div class="sep" style="padding-top:0">Adicionar lançamento</div>
+      <div class="row" style="flex-wrap:wrap;gap:8px">
+        <select id="fin-type" style="min-width:95px"><option value="ganho">Ganho</option><option value="gasto">Gasto</option></select>
+        <input type="text" id="fin-desc" placeholder="Descrição..." style="flex:1;min-width:130px">
+        <input type="date" id="fin-date" style="min-width:140px">
+        <input type="time" id="fin-time" placeholder="Hora (op.)" style="min-width:105px">
+        <input type="number" id="fin-val" placeholder="R$ valor" step="0.01" style="min-width:110px">
+        <button class="btn btn-green" onclick="addFin()">+ Adicionar</button>
+      </div>
+    </div>
+    <div id="fin-list"></div>
+  </div>
+
+</main>
+
+<script>
+let state = JSON.parse(localStorage.getItem('meupainelv1') || '{"tasks":[],"months":{},"bills":{}}');
+let timerInterval = null;
+let taskFilter = 'all';
+
+function save(){localStorage.setItem('meupainelv1',JSON.stringify(state))}
+
+// Header date
+function updateHeaderDate(){
+  const d = new Date();
+  document.getElementById('header-date').textContent = d.toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'long'});
+}
+updateHeaderDate();
+
+function showTab(t){
+  document.querySelectorAll('.tab').forEach((b,i)=>b.classList.toggle('active',['tarefas','contas','financas'][i]===t));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(t).classList.add('active');
+  if(t==='financas')renderFin();
+  if(t==='contas')renderBills();
+}
+
+function fmt(sec){const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=sec%60;return [h,m,s].map(v=>String(v).padStart(2,'0')).join(':')}
+function fmtDur(sec){if(!sec)return '0s';if(sec<60)return sec+'s';if(sec<3600)return Math.floor(sec/60)+'min';const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60);return h+'h'+(m?m+'min':'')}
+function todayStr(){return new Date().toISOString().slice(0,10)}
+function currentMonthKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
+function monthLabel(key){const[y,m]=key.split('-');return['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'][parseInt(m)-1]+' '+y}
+
+function getElapsed(t){
+  if(t.status==='iniciada'&&t.startedAt) return t.elapsed+Math.floor((Date.now()-t.startedAt)/1000);
+  return t.elapsed;
+}
+
+function tickTimers(){
+  document.querySelectorAll('[data-taskid]').forEach(el=>{
+    const id=parseInt(el.dataset.taskid);
+    const t=state.tasks.find(x=>x.id===id);
+    if(t&&t.status==='iniciada') el.textContent=fmt(getElapsed(t));
+  });
+}
+
+function startGlobalTick(){
+  clearInterval(timerInterval);
+  timerInterval=setInterval(tickTimers,1000);
+}
+
+// TAREFAS
+function setFilter(f){
+  taskFilter=f;
+  ['all','iniciada','pausada','concluida'].forEach(k=>{
+    document.getElementById('f-'+k).classList.toggle('on',k===f);
+  });
+  renderTasks();
+}
+
+function addTask(){
+  const name=document.getElementById('task-input').value.trim();
+  if(!name)return;
+  state.tasks.filter(t=>t.status==='iniciada').forEach(t=>{t.elapsed=getElapsed(t);t.startedAt=null;t.status='pausada'});
+  const task={id:Date.now(),name,status:'iniciada',startedAt:Date.now(),elapsed:0,date:todayStr()};
+  state.tasks.unshift(task);save();
+  document.getElementById('task-input').value='';
+  renderTasks();startGlobalTick();
+}
+
+function pauseTask(id){
+  const t=state.tasks.find(x=>x.id===id);if(!t)return;
+  t.elapsed=getElapsed(t);t.startedAt=null;t.status='pausada';
+  save();renderTasks();
+}
+
+function resumeTask(id){
+  state.tasks.filter(x=>x.status==='iniciada').forEach(x=>{x.elapsed=getElapsed(x);x.startedAt=null;x.status='pausada'});
+  const t=state.tasks.find(x=>x.id===id);if(!t)return;
+  t.status='iniciada';t.startedAt=Date.now();
+  save();renderTasks();startGlobalTick();
+}
+
+function completeTask(id){
+  const t=state.tasks.find(x=>x.id===id);if(!t)return;
+  t.elapsed=getElapsed(t);t.startedAt=null;t.status='concluida';
+  save();renderTasks();
+}
+
+function deleteTask(id){
+  state.tasks=state.tasks.filter(t=>t.id!==id);save();renderTasks();
+}
+
+function renderTasks(){
+  const today=todayStr();
+  const todayAll=state.tasks.filter(t=>t.date===today);
+  const iniciadas=todayAll.filter(t=>t.status==='iniciada').length;
+  const pausadas=todayAll.filter(t=>t.status==='pausada').length;
+  const concluidas=todayAll.filter(t=>t.status==='concluida').length;
+  const totalSec=todayAll.filter(t=>t.status==='concluida').reduce((a,t)=>a+t.elapsed,0);
+
+  document.getElementById('today-summary').innerHTML=`
+    <div class="metric"><div class="label">Concluídas</div><div class="val green">${concluidas}</div></div>
+    <div class="metric"><div class="label">Em andamento</div><div class="val blue">${iniciadas}</div></div>
+    <div class="metric"><div class="label">Pausadas</div><div class="val amber">${pausadas}</div></div>
+    <div class="metric"><div class="label">Tempo hoje</div><div class="val" style="font-size:16px;font-family:'DM Mono',monospace">${fmtDur(totalSec)}</div></div>`;
+
+  const filtered=taskFilter==='all'?state.tasks:state.tasks.filter(t=>t.status===taskFilter);
+  const byDate={};
+  filtered.forEach(t=>{if(!byDate[t.date])byDate[t.date]=[];byDate[t.date].push(t)});
+
+  const list=document.getElementById('task-list');list.innerHTML='';
+  if(!filtered.length){list.innerHTML='<div class="empty">Nenhuma atividade aqui.</div>';return;}
+
+  Object.keys(byDate).sort((a,b)=>b.localeCompare(a)).slice(0,14).forEach(date=>{
+    const dg=document.createElement('div');
+    const dlabel=date===today?'Hoje':new Date(date+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'});
+    const dtot=byDate[date].filter(t=>t.status==='concluida').reduce((a,t)=>a+t.elapsed,0);
+    dg.innerHTML=`<div class="day-label">${dlabel}${dtot?' · '+fmtDur(dtot)+' concluído':''}</div>`;
+
+    byDate[date].forEach(t=>{
+      const elapsed=getElapsed(t);
+      const c=document.createElement('div');
+      c.className='task-card'+(t.status==='iniciada'?' running':t.status==='pausada'?' paused':'');
+
+      let actions='';
+      if(t.status==='iniciada'){
+        actions=`<button class="btn btn-amber btn-sm" onclick="pauseTask(${t.id})">⏸ Pausar</button>
+                 <button class="btn btn-blue btn-sm" onclick="completeTask(${t.id})">✓ Concluir</button>`;
+      } else if(t.status==='pausada'){
+        actions=`<button class="btn btn-green btn-sm" onclick="resumeTask(${t.id})">▶ Retomar</button>
+                 <button class="btn btn-blue btn-sm" onclick="completeTask(${t.id})">✓ Concluir</button>`;
+      }
+
+      c.innerHTML=`
+        <div class="row" style="justify-content:space-between;flex-wrap:nowrap">
+          <div style="flex:1;min-width:0">
+            <div class="row" style="gap:6px;margin-bottom:4px;flex-wrap:wrap">
+              <span style="font-weight:500;font-size:14px">${t.name}</span>
+              <span class="sbadge s-${t.status}"><span class="dot dot-${t.status}"></span>${t.status.charAt(0).toUpperCase()+t.status.slice(1)}</span>
+            </div>
+            <div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--txt2)" ${t.status==='iniciada'?`data-taskid="${t.id}"`:''}>${fmt(elapsed)}</div>
+          </div>
+          <button class="del-btn" onclick="deleteTask(${t.id})">✕</button>
+        </div>
+        ${actions?`<div class="task-actions">${actions}</div>`:''}`;
+      dg.appendChild(c);
+    });
+    list.appendChild(dg);
+  });
+
+  if(state.tasks.some(t=>t.status==='iniciada')) startGlobalTick();
+}
+
+// CONTAS
+function ensureBillMonth(key){if(!state.bills[key])state.bills[key]=[];save()}
+function ensureMonths(key){if(!state.months[key])state.months[key]=[];save()}
+
+function newBillMonth(){
+  const input=prompt('Mês e ano (ex: 2025-08):');
+  if(!input||!/^\d{4}-\d{2}$/.test(input.trim()))return alert('Formato inválido. Use AAAA-MM');
+  ensureBillMonth(input.trim());renderBills();
+  document.getElementById('bill-month-select').value=input.trim();
+}
+
+function addBill(){
+  const key=document.getElementById('bill-month-select').value;
+  const name=document.getElementById('bill-name').value.trim();
+  const val=parseFloat(document.getElementById('bill-val').value);
+  const due=parseInt(document.getElementById('bill-due').value)||null;
+  if(!name||isNaN(val)||val<=0)return alert('Preencha nome e valor.');
+  ensureBillMonth(key);
+  state.bills[key].push({id:Date.now(),name,val,due,paid:false,paidDate:null,paidTime:null});
+  save();renderBills();
+  document.getElementById('bill-name').value='';document.getElementById('bill-val').value='';document.getElementById('bill-due').value='';
+}
+
+function togglePaid(key,id){
+  const bill=state.bills[key].find(b=>b.id===id);if(!bill)return;
+  if(!bill.paid){
+    const dateVal=prompt('Data do pagamento (AAAA-MM-DD):',todayStr());if(!dateVal)return;
+    const timeVal=prompt('Hora do pagamento (opcional, ex: 14:30):','');
+    bill.paid=true;bill.paidDate=dateVal;bill.paidTime=timeVal||null;
+    const mKey=dateVal.slice(0,7);ensureMonths(mKey);
+    state.months[mKey].push({id:Date.now(),type:'gasto',desc:'Conta: '+bill.name,date:dateVal,time:bill.paidTime,val:bill.val,fromBill:true,billId:id});
+  } else {
+    if(!confirm('Desfazer pagamento? O lançamento será removido das finanças.'))return;
+    Object.keys(state.months).forEach(mk=>{state.months[mk]=state.months[mk].filter(i=>!(i.fromBill&&i.billId===id))});
+    bill.paid=false;bill.paidDate=null;bill.paidTime=null;
+  }
+  save();renderBills();
+}
+
+function deleteBill(key,id){
+  Object.keys(state.months).forEach(mk=>{state.months[mk]=state.months[mk].filter(i=>!(i.fromBill&&i.billId===id))});
+  state.bills[key]=state.bills[key].filter(b=>b.id!==id);save();renderBills();
+}
+
+function renderBills(){
+  ensureBillMonth(currentMonthKey());
+  const sel=document.getElementById('bill-month-select');const prev=sel.value;sel.innerHTML='';
+  Object.keys(state.bills).sort((a,b)=>b.localeCompare(a)).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=monthLabel(k);sel.appendChild(o)});
+  if(prev&&state.bills[prev])sel.value=prev;
+
+  const key=sel.value;const bills=state.bills[key]||[];
+  const total=bills.reduce((a,b)=>a+b.val,0);
+  const pago=bills.filter(b=>b.paid).reduce((a,b)=>a+b.val,0);
+  const pend=total-pago;
+  const pct=total>0?Math.round((pago/total)*100):0;
+
+  document.getElementById('bill-summary').innerHTML=`
+    <div class="metric"><div class="label">Total</div><div class="val">R$ ${total.toFixed(2)}</div></div>
+    <div class="metric"><div class="label">Pago</div><div class="val green">R$ ${pago.toFixed(2)}</div></div>
+    <div class="metric"><div class="label">Pendente</div><div class="val red">R$ ${pend.toFixed(2)}</div></div>
+    <div class="metric"><div class="label">Progresso</div><div class="val">${pct}%</div><div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div></div>`;
+
+  const list=document.getElementById('bill-list');list.innerHTML='';
+  if(!bills.length){list.innerHTML='<div class="empty">Nenhuma conta cadastrada.</div>';return;}
+
+  const today=parseInt(todayStr().slice(8));
+  const card=document.createElement('div');card.className='card';
+  bills.forEach(b=>{
+    const overdue=!b.paid&&b.due&&today>b.due;
+    const sc=b.paid?'paid':overdue?'overdue':'pending';
+    const bc=b.paid?'pill-paid':overdue?'pill-overdue':'pill-pending';
+    const bt=b.paid?'Pago':overdue?'Atrasado':'Pendente';
+    const row=document.createElement('div');row.className='bill-item';
+    row.innerHTML=`
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="bill-dot ${sc}"></div>
+        <div>
+          <div style="font-weight:500;font-size:14px">${b.name}</div>
+          <div style="font-size:12px;color:var(--txt2)">${b.due?'Venc. dia '+b.due:''}${b.paidDate?' · Pago em '+new Date(b.paidDate+'T12:00:00').toLocaleDateString('pt-BR')+(b.paidTime?' às '+b.paidTime:''):''}</div>
+        </div>
+      </div>
+      <span class="pill ${bc}">${bt}</span>
+      <span style="font-weight:600;font-size:14px;color:${b.paid?'var(--green)':'var(--red)'}">R$ ${b.val.toFixed(2)}</span>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button class="btn btn-sm ${b.paid?'btn-red':'btn-green'}" onclick="togglePaid('${key}',${b.id})">${b.paid?'✕':'✓'}</button>
+        <button class="del-btn" onclick="deleteBill('${key}',${b.id})">✕</button>
+      </div>`;
+    card.appendChild(row);
+  });
+  list.appendChild(card);
+}
+
+// FINANÇAS
+function newMonth(){
+  const input=prompt('Mês e ano (ex: 2025-08):');
+  if(!input||!/^\d{4}-\d{2}$/.test(input.trim()))return alert('Formato inválido. Use AAAA-MM');
+  ensureMonths(input.trim());renderFin();document.getElementById('month-select').value=input.trim();
+}
+
+function renderFin(){
+  ensureMonths(currentMonthKey());
+  const sel=document.getElementById('month-select');const prev=sel.value;sel.innerHTML='';
+  Object.keys(state.months).sort((a,b)=>b.localeCompare(a)).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=monthLabel(k);sel.appendChild(o)});
+  if(prev&&state.months[prev])sel.value=prev;
+
+  const key=sel.value;const items=state.months[key]||[];
+  const ganhos=items.filter(i=>i.type==='ganho').reduce((a,i)=>a+i.val,0);
+  const gastos=items.filter(i=>i.type==='gasto').reduce((a,i)=>a+i.val,0);
+  const saldo=ganhos-gastos;
+
+  document.getElementById('fin-summary').innerHTML=`
+    <div class="metric"><div class="label">Ganhos</div><div class="val green">R$ ${ganhos.toFixed(2)}</div></div>
+    <div class="metric"><div class="label">Gastos</div><div class="val red">R$ ${gastos.toFixed(2)}</div></div>
+    <div class="metric"><div class="label">Saldo</div><div class="val" style="color:${saldo>=0?'var(--green)':'var(--red)'}">R$ ${saldo.toFixed(2)}</div></div>`;
+
+  const byDay={};items.forEach(i=>{if(!byDay[i.date])byDay[i.date]=[];byDay[i.date].push(i)});
+  const list=document.getElementById('fin-list');list.innerHTML='';
+  if(!items.length){list.innerHTML='<div class="empty">Nenhum lançamento ainda.</div>';return;}
+
+  Object.keys(byDay).sort((a,b)=>b.localeCompare(a)).forEach(date=>{
+    const dg=document.createElement('div');dg.className='card';
+    const dlabel=new Date(date+'T12:00:00').toLocaleDateString('pt-BR',{weekday:'long',day:'2-digit',month:'short'});
+    dg.innerHTML=`<div class="sep" style="padding-top:0">${dlabel}</div>`;
+    byDay[date].forEach(i=>{
+      const row=document.createElement('div');row.className='fin-item';
+      row.innerHTML=`
+        <div>
+          <span style="font-weight:500;font-size:14px">${i.desc}</span>
+          ${i.fromBill?`<span class="tag">conta</span>`:''}
+          ${i.time?`<span style="font-size:12px;color:var(--txt2);margin-left:6px">${i.time}</span>`:''}
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <span class="${i.type==='ganho'?'gain':'loss'}">${i.type==='ganho'?'+':'-'} R$ ${i.val.toFixed(2)}</span>
+          ${!i.fromBill?`<button class="del-btn" onclick="deleteFin('${key}',${i.id})">✕</button>`:`<span style="font-size:12px;color:var(--txt3)" title="Gerenciar na aba Contas">🔒</span>`}
+        </div>`;
+      dg.appendChild(row);
+    });
+    list.appendChild(dg);
+  });
+}
+
+function addFin(){
+  const type=document.getElementById('fin-type').value;
+  const desc=document.getElementById('fin-desc').value.trim();
+  const date=document.getElementById('fin-date').value;
+  const time=document.getElementById('fin-time').value;
+  const val=parseFloat(document.getElementById('fin-val').value);
+  if(!desc||!date||isNaN(val)||val<=0)return alert('Preencha descrição, data e valor.');
+  const mKey=date.slice(0,7);ensureMonths(mKey);
+  state.months[mKey].push({id:Date.now(),type,desc,date,time,val});save();
+  document.getElementById('fin-desc').value='';document.getElementById('fin-val').value='';document.getElementById('fin-time').value='';
+  document.getElementById('month-select').value=mKey;renderFin();
+}
+
+function deleteFin(key,id){
+  state.months[key]=state.months[key].filter(i=>i.id!==id);save();renderFin();
+}
+
+// INIT
+document.getElementById('fin-date').value=todayStr();
+ensureMonths(currentMonthKey());
+ensureBillMonth(currentMonthKey());
+renderTasks();renderFin();renderBills();
+if(state.tasks.some(t=>t.status==='iniciada')) startGlobalTick();
+</script>
+</body>
+</html>
